@@ -40,13 +40,36 @@ public class Player {
         }
     }
 
-    public void update(boolean[] keys)
-    {
-        if (keys[KeyEvent.VK_UP]) {y -= speed;}
-        if (keys[KeyEvent.VK_DOWN]) {y += speed;}
-        if (keys[KeyEvent.VK_RIGHT]) {x += speed;}
-        if (keys[KeyEvent.VK_LEFT]) {x -= speed;}
+    public void update(boolean[] keys, double gravity, double height, double width) {
+    // Apply all movement inputs
+    if (keys[KeyEvent.VK_UP]) {y -= speed;}
+    if (keys[KeyEvent.VK_DOWN]) {y += speed;}
+    if (keys[KeyEvent.VK_RIGHT]) {x += speed;}
+    if (keys[KeyEvent.VK_LEFT]) {x -= speed;}
+
+    // Apply gravity
+    //y += gravity;
+
+    // Clamp Y position smoothly to top and bottom borders
+    double minY = hitboxPadding;
+    double maxY = height - this.height - hitboxPadding;
+    
+    if (y < minY) {
+        y = minY;
+    } else if (y > maxY) {
+        y = maxY;
     }
+
+    // Left and right padding
+    double minX = hitboxPadding;
+    double maxX = width - this.width - hitboxPadding;
+    
+    if (x < minX) {
+        x = minX;
+    } else if (x > maxX) {
+        x = maxX;
+    }
+}
 
     public Rectangle getBounds() {
         return new Rectangle((int) x + hitboxPadding, (int) y + hitboxPadding, width - (hitboxPadding *2), height - (hitboxPadding*2));

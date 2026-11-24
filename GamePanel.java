@@ -20,6 +20,9 @@ public class GamePanel extends JPanel implements ActionListener {
     private static int HEIGHT = 600;
     private Image backgroundImage;
     private long startTime;
+    private final double GRAVITY = 1
+    
+    ;
 
     // constructor 
     public GamePanel()
@@ -91,7 +94,7 @@ public class GamePanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e)
     {
         if (currentState == GameState.PLAYING) {
-            player.update(keys);
+            player.update(keys, GRAVITY, HEIGHT, WIDTH);
             for (int i = 0; i < hazards.size(); i++) {
                 hazards.get(i).update(player);
                 
