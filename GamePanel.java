@@ -14,6 +14,8 @@ public class GamePanel extends JPanel implements ActionListener {
     private ArrayList<Coin> coins = new ArrayList<>();
     private int score = 0;
     private ArrayList<Hazard> hazards = new ArrayList<>();
+    private double hazardSpeed = 1;
+
     public enum GameState {MENU, PLAYING, GAME_OVER, WIN}
     private GameState currentState = GameState.MENU;
     private static int WIDTH = 800;
@@ -81,11 +83,12 @@ public class GamePanel extends JPanel implements ActionListener {
         }
         // spawn hazards
         hazards.clear();
+        hazardSpeed = 1;
         for (int i = 0; i < 8; i++)
         {
             double rx = Math.random() * WIDTH;
             double ry = Math.random() * HEIGHT;
-            hazards.add(new Hazard(rx,ry));
+            hazards.add(new Hazard(rx,ry,hazardSpeed));
         }
 
         startTime = System.currentTimeMillis();
@@ -110,12 +113,14 @@ public class GamePanel extends JPanel implements ActionListener {
             // change hazard speed over time
             long now = System.currentTimeMillis();
             long elapsed = now - startTime;
-            if (elapsed > (long) 10000)
+            if (elapsed >= (long) 10000)
             {
+                hazardSpeed += 0.5;
+                hazards.add(new Hazard(Math.random() * WIDTH, Math.random() * HEIGHT, hazardSpeed));   
                 for (int i = 0; i < hazards.size(); i++) {
-                    //hazards.add(new Hazard(Math.random() * WIDTH, Math.random() * HEIGHT));
-                    hazards.get(i).setSpeed(2);
+                    hazards.get(i).setSpeed(hazardSpeed);
                 }
+                startTime = now;
             }
 
             // collect coins

@@ -10,7 +10,7 @@ public class Hazard {
     private double x, y;
     private int size = 40;
     private static BufferedImage sprite;
-    private int speed = 1;
+    private double speed = 1;
 
     static {
          try {
@@ -21,10 +21,11 @@ public class Hazard {
     }
 
     // constructor 
-    public Hazard(double startX, double startY)
+    public Hazard(double startX, double startY, double speed)
     {
         x = startX;
         y = startY;
+        this.speed = speed;
     }
 
     public Rectangle getBounds(){
@@ -93,7 +94,7 @@ public class Hazard {
         }
     }
 
-    public void setSpeed(int newSpeed)
+    public void setSpeed(double newSpeed)
     {
         speed = newSpeed;
     }
