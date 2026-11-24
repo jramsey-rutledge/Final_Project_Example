@@ -1,11 +1,11 @@
 package Final_Project_Example;
 import java.awt.*;
-import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class GamePanel extends JPanel implements ActionListener {
     private final boolean[] keys = new boolean[256];
@@ -21,10 +21,11 @@ public class GamePanel extends JPanel implements ActionListener {
     private static int WIDTH = 800;
     private static int HEIGHT = 600;
     private Image backgroundImage;
+    private Title t = new Title();
     private long startTime;
-    private final double GRAVITY = 1
-    
-    ;
+    private final double GRAVITY = 0.25;
+    private int mouseX = -1000;
+    private int mouseY = -1000;
 
     // constructor 
     public GamePanel()
@@ -64,6 +65,20 @@ public class GamePanel extends JPanel implements ActionListener {
             }
         }
         );
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                mouseX = e.getX();
+                mouseY = e.getY();
+            }
+        });
         
         timer = new Timer(16,this);
         timer.start();
@@ -96,11 +111,15 @@ public class GamePanel extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e)
     {
-        if (currentState == GameState.PLAYING) {
+        if (currentState == GameState.MENU) {
+            t.applyMouseRepulsion(mouseX, mouseY, 200.0, 2.5);
+            t.update(WIDTH, HEIGHT, GRAVITY); 
+        } 
+        else if (currentState == GameState.PLAYING) {
             player.update(keys, GRAVITY, HEIGHT, WIDTH);
-            for (int i = 0; i < hazards.size(); i++) {
+            for (int i = 0; i < hazards.size(); i++) 
+            {
                 hazards.get(i).update(player);
-                
             }
 
             // avoid collisions of hazards
@@ -169,6 +188,11 @@ public class GamePanel extends JPanel implements ActionListener {
         super.paintComponent(g);
         switch (currentState) {
             case MENU :
+                if (backgroundImage != null) {
+                    g.drawImage(backgroundImage, 0, 0, WIDTH, HEIGHT, this);
+                }
+                t.paintComponent(g);
+                
                 g.setColor(Color.RED);
                 g.drawString("Please press enter to start game",300,300);
                 break;
